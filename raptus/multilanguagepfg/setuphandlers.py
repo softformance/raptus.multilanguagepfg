@@ -2,7 +2,8 @@ from raptus.multilanguagepfg import extender
 
 from Products.CMFCore.utils import getToolByName
 
-extenders = []
+extenders = [extender.FormFolderExtender,
+             extender.BaseFormFieldExtender]
 
 indexes = ('SearchableText', 'Subject', 'Title', 'Description', 'sortable_title',)
 
@@ -21,7 +22,7 @@ def install(context):
 
     sm = portal.getSiteManager()
     for extender in extenders:
-        sm.registerAdapter(modifier, name='MultilanguagePFG%s' % extender.__name__)
+        sm.registerAdapter(extender, name='MultilanguagePFG%s' % extender.__name__)
         
     reindex(portal)
     
@@ -33,7 +34,7 @@ def uninstall(context):
     portal = context.getSite()
     sm = portal.getSiteManager()
     for extender in extenders:
-        sm.unregisterAdapter(extender, name='MultilanguagePFG%s' % extener.__name__)
+        sm.unregisterAdapter(extender, name='MultilanguagePFG%s' % extender.__name__)
         
     reindex(portal)
     

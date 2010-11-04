@@ -2,6 +2,7 @@
 <metadata>
   <version>1.0b1</version>
   <dependencies>
-    <dependency>profile-raptus.multilanguagepfg:default</dependency>
+    <dependency>profile-raptus.multilanguagefields:default</dependency>
+    <dependency>profile-Products.PloneFormGen:default</dependency>
   </dependencies>
 </metadata>
