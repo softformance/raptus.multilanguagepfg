@@ -223,22 +223,24 @@
                        
                        
                 <tal:comment tal:condition="nothing">
+                  ===================================================================
                   Changes:
                   multilanguagefields need to call the resetLabel and the submitLabel
+                  ===================================================================
                 </tal:comment>
                        
                 <input class="context"
                        type="submit"
                        name="form_submit"
                        value="Save"
-                       tal:attributes="value here/submitLabel|string:Submit"
+                       tal:attributes="value here/getSubmitLabel|string:Submit"
                        />
                 <input class="standalone"
                        type="reset"
                        name="form.button.cancel"
                        value="Cancel"
                        tal:condition="python: getattr(here,'useCancelButton',True)"
-                       tal:attributes="value here/resetLabel|string:Reset; 
+                       tal:attributes="value here/getResetLabel|string:Reset; 
                                        tabindex tabindex/next|nothing"
                        />
             </metal:block>

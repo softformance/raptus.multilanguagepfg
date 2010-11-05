@@ -7,6 +7,7 @@ from raptus.multilanguageplone.extender import fields
 from raptus.multilanguageplone.extender.folder import FolderExtender
 
 from Products.ATContentTypes.configuration import zconf
+from Products.Archetypes.atapi import AnnotationStorage
 
 from Products.PloneFormGen.content.form import FormFolder
 from Products.PloneFormGen import PloneFormGenMessageFactory as _
@@ -18,7 +19,7 @@ class FormFolderExtender(FolderExtender):
     
     fields = FolderExtender.fields + [
         fields.StringField('submitLabel',
-            accessor="submitLabel",
+            storage=AnnotationStorage(migrate=True),
             required=0,
             searchable=0,
             default=_("Submit"),
@@ -28,7 +29,7 @@ class FormFolderExtender(FolderExtender):
             ),
         ),
         fields.StringField('resetLabel',
-            accessor="resetLabel",
+            storage=AnnotationStorage(migrate=True),
             required=0,
             searchable=0,
             default=_("Reset"),
@@ -37,7 +38,7 @@ class FormFolderExtender(FolderExtender):
             ),
         ),
         fields.TextField('formPrologue',
-            accessor="formPrologue",
+            storage=AnnotationStorage(migrate=True),
             schemata='default',
             required=False,
             # Disable search to bypass a unicode decode error
@@ -57,7 +58,7 @@ class FormFolderExtender(FolderExtender):
             ),
         ),
         fields.TextField('formEpilogue',
-            accessor="formEpilogue",
+            storage=AnnotationStorage(migrate=True),
             schemata='default',
             required=False,
             # Disable search to bypass a unicode decode error

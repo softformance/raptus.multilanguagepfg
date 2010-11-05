@@ -1,9 +1,13 @@
 from raptus.multilanguagepfg import extender
+from raptus.multilanguagepfg import config
 
 from Products.CMFCore.utils import getToolByName
 
 extenders = [extender.FormFolderExtender,
-             extender.BaseFormFieldExtender]
+             extender.BaseFormFieldExtender,
+             extender.ThanksPageExtender,
+             extender.FGLikertFieldExtender,
+             extender.FieldsetFolderExtender]
 
 indexes = ('SearchableText', 'Subject', 'Title', 'Description', 'sortable_title',)
 
@@ -22,7 +26,7 @@ def install(context):
 
     sm = portal.getSiteManager()
     for extender in extenders:
-        sm.registerAdapter(extender, name='MultilanguagePFG%s' % extender.__name__)
+        sm.registerAdapter(extender, name=config.PROJECT_NAME + extender.__name__)
         
     reindex(portal)
     
@@ -34,7 +38,7 @@ def uninstall(context):
     portal = context.getSite()
     sm = portal.getSiteManager()
     for extender in extenders:
-        sm.unregisterAdapter(extender, name='MultilanguagePFG%s' % extender.__name__)
+        sm.unregisterAdapter(extender, name=config.PROJECT_NAME + extender.__name__)
         
     reindex(portal)
     
