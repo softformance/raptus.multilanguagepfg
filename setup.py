@@ -24,7 +24,7 @@ setup(name='raptus.multilanguagepfg',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'raptus.multilanguageplone'
+          'raptus.multilanguageplone',
           'Products.PloneFormGen'
           # -*- Extra requirements: -*-
       ],
