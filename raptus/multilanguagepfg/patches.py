@@ -7,7 +7,7 @@ from zope.component import queryAdapter
 from archetypes.schemaextender.interfaces import ISchemaExtender
 from Products.PloneFormGen.content.form import FormFolder
 
-from Products.PloneFormGen.content.fieldsBase import StringVocabularyField
+from Products.PloneFormGen.content.fieldsBase import StringVocabularyField, LinesVocabularyField
 from Products.PloneFormGen.content.likertField import LikertField
 from Products.CMFCore.Expression import getExprContext
 from Products.Archetypes.utils import shasattr
@@ -52,6 +52,7 @@ def _getFieldObjects(self, objTypes=None, includeFSMarkers=False):
                 myObjs.append(obj)
             if shasattr(obj, 'fieldsetFields'):
                 if queryAdapter(obj, interface=ISchemaExtender, name=config.PROJECT_NAME + FieldsetFolderExtender.__name__):
+                    # Product is not installed --> nothing to patch
                     obj.setTitle(obj.Title())
                     obj.setDescription(obj.Description())
                 myObjs += obj.fieldsetFields(objTypes, includeFSMarkers)
@@ -66,7 +67,7 @@ def _getFieldObjects(self, objTypes=None, includeFSMarkers=False):
         field.setDescription(field.Description())
         if hasattr(field,'setFgDefault'):
             field.setFgDefault(field.getFgDefault())
-        if isinstance(field.fgField, StringVocabularyField):
+        if isinstance(field.fgField, (StringVocabularyField, LinesVocabularyField,)):
             field.fgVocabulary = field.getFgVocabulary()
         if isinstance(field.fgField, LikertField):
             field.setLikertAnswers(field.getLikertAnswers())

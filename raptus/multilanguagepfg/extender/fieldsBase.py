@@ -8,6 +8,7 @@ from raptus.multilanguageplone.extender.base import DefaultExtender
 
 from Products.ATContentTypes.configuration import zconf
 from Products.Archetypes.Field import TextField, LinesField, StringField
+from Products.Archetypes.Widget import TextAreaWidget, RichWidget
 from Products.Archetypes.atapi import AnnotationStorage
 
 from Products.PloneFormGen.content.fieldsBase import BaseFormField
@@ -18,7 +19,7 @@ class BaseFormFieldExtender(DefaultExtender):
     
     adapts(BaseFormField)
     
-    textField = fields.TextField('fgDefault',
+    textFieldTextArea = fields.TextField('fgDefault',
         searchable=0,
         required=0,
         storage=AnnotationStorage(migrate=True),
@@ -29,7 +30,23 @@ class BaseFormFieldExtender(DefaultExtender):
             """),
         ),
     )
-    
+
+    textFieldRich =fields.TextField('fgDefault',
+        searchable=0,
+        required=0,
+        validators = ('isTidyHtmlWithCleanup',),
+        default_content_type = 'text/html',
+        default_output_type = 'text/x-html-safe',
+        allowable_content_types = zconf.ATDocument.allowed_content_types,
+        widget=widgets.RichWidget(label=_(u'label_fgtextdefault_text', default=u'Default'),
+            description=_(u'help_fgtextdefault_text', default=u"""
+                The text the field should contain when the form is first displayed.
+                Note that this may be overridden dynamically.
+            """),
+        allow_file_upload = False,
+        ),
+    )
+
     linesField = fields.LinesField('fgDefault',
         searchable=0,
         required=0,
@@ -71,40 +88,19 @@ class BaseFormFieldExtender(DefaultExtender):
         ),
     )
     
-    # Todo --> attache theses fields
-    fields.TextField('fgDefault',
-        searchable=0,
-        required=0,
-        validators = ('isTidyHtmlWithCleanup',),
-        default_content_type = 'text/html',
-        default_output_type = 'text/x-html-safe',
-        allowable_content_types = zconf.ATDocument.allowed_content_types,
-        widget=widgets.RichWidget(label=_(u'label_fgtextdefault_text', default=u'Default'),
-            description=_(u'help_fgtextdefault_text', default=u"""
-                The text the field should contain when the form is first displayed.
-                Note that this may be overridden dynamically.
-            """),
-        allow_file_upload = False,
-        ),
-    )
 
-    fields.TextField('fgDefault',
-        searchable=0,
-        required=0,
-        widget=widgets.TextAreaWidget(label=_(u'label_fgtextdefault_text', default=u'Default'),
-            description=_(u'help_fgtextdefault_text', default=u"""
-                The text the field should contain when the form is first displayed.
-                Note that this may be overridden dynamically.
-            """),
-        ),
-    )
 
     def getFields(self):
         defaultFields = DefaultExtender.fields + []#make a copy
         fgDefault = self.context.schema.get('fgDefault')
         
         if isinstance(fgDefault,TextField):
-            defaultFields.append(self.textField)
+            widget = fgDefault.widget
+            if isinstance(widget, TextAreaWidget):
+                defaultFields.append(self.textFieldTextArea)
+            if isinstance(widget, RichWidget):
+                defaultFields.append(self.textFieldTextArea)
+                
         if isinstance(fgDefault,LinesField):
             defaultFields.append(self.linesField)
         if isinstance(fgDefault,StringField):
