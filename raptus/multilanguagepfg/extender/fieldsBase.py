@@ -19,6 +19,8 @@ class BaseFormFieldExtender(DefaultExtender):
     
     adapts(BaseFormField)
     
+    HIDDEN_FIELDS = ('subject', 'rights',)
+    
     textFieldTextArea = fields.TextField('fgDefault',
         searchable=0,
         required=0,
@@ -87,11 +89,14 @@ class BaseFormFieldExtender(DefaultExtender):
             """),
         ),
     )
-    
 
 
     def getFields(self):
         defaultFields = DefaultExtender.fields + []#make a copy
+        for field in defaultFields:
+            if field.getName() in self.HIDDEN_FIELDS:
+                field.widget.visible = False
+        
         fgDefault = self.context.schema.get('fgDefault')
         
         if isinstance(fgDefault,TextField):
