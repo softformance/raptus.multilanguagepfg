@@ -23,7 +23,7 @@
 
     <!-- import steps -->
     <genericsetup:importStep
-        name="raptus.multilanguageplone-final"
+        name="raptus.multilanguagepfg-final"
         title="Configure MultilanguageFields for PloneFormGen"
         description="Install Step: Configure MultilanguageFields for PloneFormGen"
         handler="raptus.multilanguagepfg.setuphandlers.install">
