@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0b1 (2010-11-3)
+1.0b1 (2010-11-8)
 ------------------
 
-* First public release
+* Initial release
