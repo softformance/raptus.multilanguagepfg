@@ -26,21 +26,14 @@ buildout.cfg. Look for the section that looks like this::
     eggs =
         Plone
 
-This section might have additional lines if you have other add-ons already
-installed. Just add the raptus.article.multilanguagefields on a separate line, like this::
+Next step is to add the zcml files to the "zcml" section of buildout.cfg. Look for the section that looks like this::
 
-    eggs =
-        Plone
+    zcml =
         raptus.multilanguagepfg
 
 Note that you have to run buildout like this::
 
     $ bin/buildout
-
-Note that if you do not use the raptus.article.default package you have to
-include the zcml of raptus.multilanguagepfg either by adding it
-to the zcml list in your buildout or by including it in another package's
-configure.zcml.
 
 Usage
 =====
