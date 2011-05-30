@@ -26,13 +26,13 @@ def install(context):
 
     sm = portal.getSiteManager()
     for extender in extenders:
+        sm.unregisterAdapter(extender, name=config.PROJECT_NAME + extender.__name__)
         sm.registerAdapter(extender, name=config.PROJECT_NAME + extender.__name__)
         
     reindex(portal)
     
 def uninstall(context):
-    if context.readDataFile('raptus.multilanguagepfg_install.txt') is None and \
-       context.readDataFile('raptus.multilanguagepfg_uninstall.txt') is None:
+    if context.readDataFile('raptus.multilanguagepfg_uninstall.txt') is None:
         return
     
     portal = context.getSite()
