@@ -6,7 +6,7 @@ version = '1.0b3'
 setup(name='raptus.multilanguagepfg',
       version=version,
       description="Provides support for raptus.multilanguagefields in PloneFormGen",
-      long_description=open("README.txt").read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "MANUAL.txt")).read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -16,7 +16,7 @@ setup(name='raptus.multilanguagepfg',
       keywords='',
       author='Raptus AG',
       author_email='dev@raptus.com',
-      url='https://svn.plone.org/svn/collective/raptus.multilanguagepfg',
+      url='https://github.com/Raptus/raptus.multilanguagepfg',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['raptus'],
