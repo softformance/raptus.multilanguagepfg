@@ -78,39 +78,45 @@
       <form name="edit_form"
             method="post"
             enctype="multipart/form-data"
-            class="enableUnloadProtection enableAutoFocus atBaseEditForm"
+            class="enableUnloadProtection enableAutoFocus atBaseEditForm fgBaseEditForm"
             action=""
             id=""
             tal:define="enable_unload_protection enable_unload_protection|python:True;
                         enable_auto_focus enable_auto_focus|python:True;"
             tal:attributes="action here/fgGetFormSubmitAction;
                             id string:fg-base-edit;
-                            class python:test(enable_unload_protection, 'enableUnloadProtection', '') + test(enable_auto_focus, ' enableAutoFocus', '') + test(path('allow_tabbing|nothing'), 'enableFormTabbing', '');">
+                            class python:'fgBaseEditForm '+ test(enable_unload_protection, 'enableUnloadProtection', '') + test(enable_auto_focus, ' enableAutoFocus', '') + test(path('allow_tabbing|nothing'), 'enableFormTabbing', '');">
 
           <metal:block define-slot="extra_top" />
+
+          <div tal:replace="structure provider:archetypes.edit.beforefieldsets|nothing"
+               tal:on-error="nothing" />
 
           <metal:block define-slot="widgets">
             <div id="pfg-fieldwrapper">
             <tal:fields repeat="field fields">
-              <tal:block tal:condition="python:field.widget.macro != 'widget_richlabel'">
-              <tal:block tal:condition="python:field.widget.visible != -1">
+                <tal:block tal:condition="python:field.widget.macro != 'widget_richlabel'">
+                <tal:block tal:condition="python:field.widget.visible != -1">
                     <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit', field=field)" />
                 </tal:block>
-              <tal:block tal:condition="python:field.widget.visible == -1">
-                  <div tal:attributes="id string:archetypes-fieldname-${field/getName}" class="field pfgHidden">
+                <tal:block tal:condition="python:field.widget.visible == -1">
+                    <div tal:attributes="id string:archetypes-fieldname-${field/getName}" class="field pfgHidden">
                         <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit', field=field)" />
                     </div>
                 </tal:block>
-              </tal:block>
-              <div tal:condition="python:field.widget.macro == 'widget_richlabel'"
-                   tal:attributes="id string:archetypes-fieldname-${field/getName}"
-                   class="field PFG-RichLabel"
-                   tal:content="structure python:request.form.get(field.getName(), field.default)">
-                  Rich Label
-              </div>
+                </tal:block>
+                <div tal:condition="python:field.widget.macro == 'widget_richlabel'"
+                     tal:attributes="id string:archetypes-fieldname-${field/getName}"
+                     class="field PFG-RichLabel"
+                     tal:content="structure python:request.form.get(field.getName(), field.default)">
+                    Rich Label
+                </div>
             </tal:fields>
             </div>
           </metal:block>
+
+          <div tal:replace="structure provider:archetypes.edit.afterfieldsets"
+               tal:on-error="nothing" />
 
           <metal:block define-slot="extra_bottom" />
 
@@ -156,12 +162,8 @@
             </tal:env>
 
             <tal:comment replace="nothing">
-              =============================================================
               Turn 'persistent_' variables from controller_state persistent
-              =============================================================
             </tal:comment>
-            
-            
             <tal:env repeat="env request/controller_state/kwargs/items">
               <input type="hidden"
                      name="key"
@@ -198,8 +200,8 @@
                    tal:attributes="value python:(last_referer and '%s/%s' % (here.absolute_url(), template.id) not in last_referer) and last_referer or (here.getParentNode() and here.getParentNode().absolute_url())"
                    />
 
- 
-            <input tal:replace="structure context/@@authenticator/authenticator" />
+
+            <input tal:replace="structure context/@@authenticator/authenticator">
 
 
             <metal:block define-slot="buttons"
@@ -220,15 +222,15 @@
                        value="Next"
                        i18n:attributes="value label_next;"
                        />
-                       
-                       
+
                 <tal:comment tal:condition="nothing">
-                  ===================================================================
-                  Changes:
-                  multilanguagefields need to call the resetLabel and the submitLabel
-                  ===================================================================
+                =============================================================
+                Changes:
+                  multilanguagefields need to call the resetLabel and the
+                  submitLabel
+                =============================================================
                 </tal:comment>
-                       
+
                 <input class="context"
                        type="submit"
                        name="form_submit"
@@ -240,8 +242,7 @@
                        name="form.button.cancel"
                        value="Cancel"
                        tal:condition="python: getattr(here,'useCancelButton',True)"
-                       tal:attributes="value here/getResetLabel|string:Reset; 
-                                       tabindex tabindex/next|nothing"
+                       tal:attributes="value here/getResetLabel|string:Reset; tabindex tabindex/next|nothing"
                        />
             </metal:block>
 
@@ -255,7 +256,7 @@
 
     <metal:footer_macro define-macro="footer">
     </metal:footer_macro>
-        
+
   </body>
 
 </html>

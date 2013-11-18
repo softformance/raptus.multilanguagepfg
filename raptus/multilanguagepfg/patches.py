@@ -14,7 +14,7 @@ from Products.Archetypes.utils import shasattr
 
 
 _getFieldObjects_old = FormFolder._getFieldObjects
-def _getFieldObjects(self, objTypes=None, includeFSMarkers=False):
+def _getFieldObjects(self, objTypes=None, includeFSMarkers=False, checkEnabled=True):
     """ return list of enclosed fields """
 
     # This function currently checks to see if
@@ -24,7 +24,8 @@ def _getFieldObjects(self, objTypes=None, includeFSMarkers=False):
     # Make sure we look through fieldsets
     if objTypes is not None:
         objTypes = list(objTypes)[:]
-        objTypes.append('FieldsetFolder')
+        # objTypes.append('FieldsetFolder')
+        objTypes.extend(('FieldsetFolder', 'FieldsetStart', 'FieldsetEnd'))
 
     myObjs = []
 
@@ -38,7 +39,8 @@ def _getFieldObjects(self, objTypes=None, includeFSMarkers=False):
         # several times in a request.
 
         # first, see if the field enable override is set
-        if shasattr(obj, 'fgTEnabled') and obj.getRawFgTEnabled():
+        # if shasattr(obj, 'fgTEnabled') and obj.getRawFgTEnabled():
+        if checkEnabled and shasattr(obj, 'fgTEnabled') and obj.getRawFgTEnabled():
             # process the override enabled TALES expression
             # create a context for expression evaluation
             context = getExprContext(self, obj)
@@ -50,12 +52,17 @@ def _getFieldObjects(self, objTypes=None, includeFSMarkers=False):
         if enabled:
             if shasattr(obj, 'fgField'):
                 myObjs.append(obj)
-            if shasattr(obj, 'fieldsetFields'):
+            # if shasattr(obj, 'fieldsetFields'):
+            elif shasattr(obj, 'fieldsetFields'):
                 if queryAdapter(obj, interface=ISchemaExtender, name=config.PROJECT_NAME + FieldsetFolderExtender.__name__):
                     # Product is not installed --> nothing to patch
                     obj.setTitle(obj.Title())
                     obj.setDescription(obj.Description())
                 myObjs += obj.fieldsetFields(objTypes, includeFSMarkers)
+            elif obj.portal_type == 'FieldsetStart':
+                myObjs.append(obj.fsStartField)
+            elif obj.portal_type == 'FieldsetEnd':
+                myObjs.append(obj.fsEndField)
 
     for field in myObjs:
 
