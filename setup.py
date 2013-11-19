@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0b3'
+version = '1.0b3_plone43'
 
 setup(name='raptus.multilanguagepfg',
       version=version,
